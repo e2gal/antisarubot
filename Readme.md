@@ -3,8 +3,7 @@ i2vbot - A Telegram bot based on illustration2vec
 
 ## Requirements
 - Python 2.7
-- illustration2vec
-- telepot
+- OpenBLAS (for NumPy)
 
 ## Setup Instructions
 - Clone and init the submodules
