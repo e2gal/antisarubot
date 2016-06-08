@@ -1,0 +1,3 @@
+#!/usr/bin/env python2
+
+TOKEN = "[YOUR_TELEGRAM_BOT_TOKEN]"

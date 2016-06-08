@@ -1,0 +1,7 @@
+- Pakai telepot dari pip kalau 8.2 udah keluar
+- Cleanup i2vbot/__init__.py:
+    - Tambahin command routing
+    - Refactor kopasan-kopasan jadi fungsi sendiri
+- Pindahin string pesan, kalau bisa pakai library terjemahan
+- Pindahin filename
+- Ganti sistem penimpanan setting dengan sesuatu yang lebih waras

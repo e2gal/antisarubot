@@ -1,0 +1,6 @@
+[submodule "submodules/illustration2vec"]
+	path = submodules/illustration2vec
+	url = https://github.com/rezoo/illustration2vec
+[submodule "submodules/telepot"]
+	path = submodules/telepot
+	url = https://github.com/metis-ai/telepot
