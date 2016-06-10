@@ -6,11 +6,11 @@ import pickle
 SETTINGS_FILE = "data/settings.pickle"
 
 def loadSettings(settingsFile = SETTINGS_FILE):
-    with open(settingsFile, 'r') as f:
-        try:
+    try:
+        with open(settingsFile, 'r') as f:
             return pickle.load(f)
-        except:
-            return {}
+    except:
+        return {}
 
 def saveSettings(settings, settingsFile = SETTINGS_FILE):
     with open(settingsFile, 'w') as f:
