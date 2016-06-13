@@ -1,4 +1,5 @@
 Cython>=0.24
 chainer
+scipy
 scikit-image
 urllib3>=1.15.1
