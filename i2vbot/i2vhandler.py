@@ -5,6 +5,8 @@ from PIL import Image
 
 import time
 
+MAXSIZE = (2500, 2500)
+
 print "Loading model..."
 start = time.time()
 
@@ -21,6 +23,10 @@ def run(fname):
     start = time.time()
 
     img = Image.open(fname)
+    if img.size > MAXSIZE:
+        print "Image too large. Resizing."
+        img.thumbnail(MAXSIZE, Image.ANTIALIAS)
+
     res = fst(illust2vec.estimate_plausible_tags([img], threshold=0.5))
 
     end   = time.time()
