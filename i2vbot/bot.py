@@ -21,7 +21,7 @@ for i in config.HANDLERS:
     if len(handlersList) == 0:
         raise ImportError("No handler specified")
 
-class InferenceError():
+class InferenceError(Exception):
     def __init__(self, message):
         self.message = message
 
