@@ -17,7 +17,8 @@ ratingTable = {
 
 def tagsDanbooru(imgID):
     resp = requests.get("http://danbooru.donmai.us/posts/" + imgID + ".json")
-    decoded   = resp.json()
+    decoded = resp.json()
+    resp.close()
 
     chars = map(lambda s : string.replace(s, "_", " "), decoded["tag_string_character"].split(" "))
     copys = map(lambda s : string.replace(s, "_", " "), decoded["tag_string_copyright"].split(" "))
@@ -28,7 +29,6 @@ def tagsDanbooru(imgID):
     copyright = set(copys)
     general   = set(gens)
 
-    resp.close()
     return (rating, character, copyright, general)
 
 def tagsYandere(imgID):
@@ -41,7 +41,7 @@ def run(fname):
     files = {"file":fname}
 
     # Get Danbooru id
-    resp =  requests.post("http://danbooru.iqdb.org", files=files)
+    resp = requests.post("http://danbooru.iqdb.org", files=files)
     soup = BeautifulSoup(resp.text, "html5lib")
     resp.close()
 

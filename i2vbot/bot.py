@@ -64,6 +64,9 @@ class I2VBot(telepot.Bot):
                 res = h.run(f)
                 if res:
                     break
+                else:
+                    # Rewind file for reading with other handler.
+                    f.seek(0)
 
             if not res:
                 raise InferenceError("Cannot do inference on this image")

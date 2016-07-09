@@ -4,4 +4,4 @@
 TOKEN = "[YOUR_TELEGRAM_BOT_TOKEN]"
 
 # Handlers that will be used for tag inference.
-HANDLERS = ["iqdb", "i2v_offline"]
+HANDLERS = ["iqdb", "i2v_online", "i2v_offline"]
