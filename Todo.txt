@@ -1,8 +1,8 @@
-- Pakai telepot dari pip kalau v8.2 udah keluar
-- Cleanup i2vbot/__init__.py:
+- Cleanup i2vbot/bot.py:
     - Tambahin command routing
     - Refactor kopasan-kopasan jadi fungsi sendiri
 - Pindahin string pesan, kalau bisa pakai library terjemahan
 - Pindahin filename
 - Ganti sistem penimpanan setting dengan sesuatu yang lebih waras
 - Terjemahin tag? (Ini bakal susah sih)
+- Tambahin i2v web service sama iqdb handler
