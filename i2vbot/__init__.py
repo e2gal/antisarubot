@@ -5,9 +5,10 @@ import string
 import tempfile
 import telepot
 
-import i2vhandler
 import messages
 import settings
+
+from handlers import i2v_online
 
 class I2VBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
@@ -42,7 +43,7 @@ class I2VBot(telepot.Bot):
         (rating, character, copyright, general) = ("", set(), set(), set())
         with tempfile.NamedTemporaryFile() as f:
             self.download_file(fileID, f.name)
-            (rating, character, copyright, general) = i2vhandler.run(f)
+            (rating, character, copyright, general) = i2v_online.run(f)
         return (rating, character, copyright, general)
 
     def _addSettings(self, chat_id, category, tagList):
