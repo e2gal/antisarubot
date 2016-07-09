@@ -1,4 +1,0 @@
-#!/usr/bin/env python2
-
-# Copy this file to bottoken.py, and add your Telegram bot token below.
-TOKEN = "[YOUR_TELEGRAM_BOT_TOKEN]"

@@ -21,10 +21,10 @@ for r in `cat requirements.txt`; do
 done
 ```
 
-- Create `bottoken.py` and add your Telegram bot token there.
+- Create `config.py` and add your Telegram bot token there.
 ```
-cp bottoken.py.example bottoken.py
-nano bottoken.py
+cp config.py.example config.py
+nano config.py
 ```
 
 - Download the models.
