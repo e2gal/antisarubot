@@ -2,3 +2,6 @@
 
 # Copy this file to config.py, and add your Telegram bot token below.
 TOKEN = "[YOUR_TELEGRAM_BOT_TOKEN]"
+
+# Handlers that will be used for tag inference.
+HANDLERS = ["iqdb", "i2v_offline"]

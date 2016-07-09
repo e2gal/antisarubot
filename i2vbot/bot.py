@@ -1,14 +1,29 @@
 #!/usr/bin/env python2
 
+import importlib
 import re
 import string
 import tempfile
 import telepot
 
+import config
 import messages
 import settings
 
-from handlers import i2v_offline
+handlersList = []
+for i in config.HANDLERS:
+    try:
+        m = importlib.import_module("." + i, "handlers")
+        handlersList.append(m)
+    except ImportError as e:
+        print e
+
+    if len(handlersList) == 0:
+        raise ImportError("No handler specified")
+
+class InferenceError():
+    def __init__(self, message):
+        self.message = message
 
 class I2VBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
@@ -43,7 +58,17 @@ class I2VBot(telepot.Bot):
         (rating, character, copyright, general) = ("", set(), set(), set())
         with tempfile.NamedTemporaryFile() as f:
             self.download_file(fileID, f.name)
-            (rating, character, copyright, general) = i2v_offline.run(f)
+
+            res = None
+            for h in handlersList:
+                res = h.run(f)
+                if res:
+                    break
+
+            if not res:
+                raise InferenceError("Cannot do inference on this image")
+
+            (rating, character, copyright, general) = res
         return (rating, character, copyright, general)
 
     def _addSettings(self, chat_id, category, tagList):

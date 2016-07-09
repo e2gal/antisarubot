@@ -1,5 +1,7 @@
 Cython>=0.24
 chainer
+html5lib
+requests
 scipy
 scikit-image
 urllib3>=1.15.1
