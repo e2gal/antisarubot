@@ -19,7 +19,7 @@ def run(fname):
     def fst(p):
         return p[0]
 
-    print "Doing inference..."
+    print "Doing inference (i2v - offline)..."
     start = time.time()
 
     img = Image.open(fname)
@@ -29,12 +29,11 @@ def run(fname):
 
     res = fst(illust2vec.estimate_plausible_tags([img], threshold=0.5))
 
-    end   = time.time()
-    print "Done. Took " + str(end - start) + "s (i2v - offline)"
-
     rating    = fst(res["rating"][0])
     character = set(map(fst, res["character"]))
     copyright = set(map(fst, res["copyright"]))
     general   = set(map(fst, res["general"]))
 
+    end   = time.time()
+    print "Done. Took " + str(end - start) + "s"
     return (rating, character, copyright, general)

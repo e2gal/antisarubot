@@ -35,7 +35,7 @@ def tagsYandere(imgID):
     pass
 
 def run(fname):
-    print "Doing inference..."
+    print "Doing inference (iqdb - Danbooru)..."
     start = time.time()
 
     files = {"file":fname}
@@ -52,10 +52,12 @@ def run(fname):
             res = tagsDanbooru(match.group(1))
 
             end = time.time()
-            print "Done. Took " + str(end - start) + "s (iqdb - Danbooru)"
+            print "Done. Took " + str(end - start) + "s"
 
             return res
 
     # Get Yandere id
 
+    end = time.time()
+    print "Failed. Took " + str(end - start) + "s"
     return None
