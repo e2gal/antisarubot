@@ -1,4 +1,5 @@
 Cython>=0.24
 chainer
+numpy
 scipy
 scikit-image
