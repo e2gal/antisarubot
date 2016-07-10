@@ -5,4 +5,3 @@
 - Pindahin filename
 - Ganti sistem penimpanan setting dengan sesuatu yang lebih waras
 - Terjemahin tag? (Ini bakal susah sih)
-- Tambahin i2v web service sama iqdb handler

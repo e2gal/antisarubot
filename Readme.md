@@ -1,4 +1,4 @@
-i2vbot - A Telegram bot based on illustration2vec
+antisarubot - A Telegram bot to guess tags from an image
 -----
 
 ## Requirements
