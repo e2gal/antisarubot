@@ -7,7 +7,6 @@ import time
 from bs4 import BeautifulSoup
 
 danbooruRegex = re.compile("^//danbooru.donmai.us/posts/(.*)$")
-yandereRegex  = None
 
 ratingTable = {
     "s": "safe",
@@ -31,9 +30,6 @@ def tagsDanbooru(imgID):
 
     return (rating, character, copyright, general)
 
-def tagsYandere(imgID):
-    pass
-
 def run(fname):
     print "Doing inference (iqdb - Danbooru)..."
     start = time.time()
@@ -46,18 +42,20 @@ def run(fname):
     resp.close()
 
     bestMatch = soup.find(text="Best match")
-    if bestMatch:
-        match = danbooruRegex.match(bestMatch.parent.parent.parent.find("a")["href"])
-        if match:
-            res = tagsDanbooru(match.group(1))
+    if not bestMatch:
+        end = time.time()
+        print "Failed. Took " + str(end - start) + "s"
+        return None
 
-            end = time.time()
-            print "Done. Took " + str(end - start) + "s"
+    match = danbooruRegex.match(bestMatch.parent.parent.parent.find("a")["href"])
+    if not match:
+        end = time.time()
+        print "Failed. Took " + str(end - start) + "s"
+        return None
 
-            return res
-
-    # Get Yandere id
+    res = tagsDanbooru(match.group(1))
 
     end = time.time()
-    print "Failed. Took " + str(end - start) + "s"
-    return None
+    print "Done. Took " + str(end - start) + "s"
+
+    return res
