@@ -3,10 +3,10 @@ i2vbot - A Telegram bot based on illustration2vec
 
 ## Requirements
 - Python 2.7
-- OpenBLAS (for NumPy)
+- OpenBLAS (optional, for offline inference only)
 
 ## Setup Instructions
-- Clone and init the submodules
+- Clone and init the submodules.
 ```
 git clone https://github.com/e2gal/i2vbot
 cd i2vbot
@@ -14,20 +14,24 @@ git submodule update --init
 ```
 
 - Install required libraries (please do this in a
-  [virtualenv](https://virtualenv.pypa.io/en/stable/) environment)
+  [virtualenv](https://virtualenv.pypa.io/en/stable/) environment).
 ```
-for r in `cat requirements.txt`; do
+for r in `cat [requirements-file]`; do
     pip install $r
 done
 ```
+  There are three requirements file:
+  - `requirements-basic.txt`: Basic dependencies. Needed to run the bot.
+  - `requirements-offlineinference.txt`: Needed to run i2v's inference engine locally.
+  - `requirements-webhook.txt`: Needed to run the bot in webhook mode.
 
-- Create `config.py` and add your Telegram bot token there.
+- Create `config.py` and adjust the settings there as needed.
 ```
 cp config.py.example config.py
 nano config.py
 ```
 
-- Download the models.
+- Download the models (optional, for offline inference only).
 ```
 sh get_models.sh
 ```
