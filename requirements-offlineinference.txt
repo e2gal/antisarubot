@@ -1,0 +1,4 @@
+Cython>=0.24
+chainer
+scipy
+scikit-image
