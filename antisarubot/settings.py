@@ -14,8 +14,8 @@ def _splitOrEmpty(s, delim):
 
     return s.split(delim)
 
-def initDB(settingsFile = SETTINGS_FILE):
-    with sqlite3.connect(settingsFile) as con:
+def initDB():
+    with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
         cur.execute("""
         CREATE TABLE IF NOT EXISTS settings (
@@ -25,7 +25,7 @@ def initDB(settingsFile = SETTINGS_FILE):
             copyright TEXT,
             general TEXT)""")
 
-def loadSettings(chat_id, settingsFile = SETTINGS_FILE):
+def loadSettings(chat_id):
     default = {
         "rating":    set(),
         "character": set(),
@@ -33,10 +33,10 @@ def loadSettings(chat_id, settingsFile = SETTINGS_FILE):
         "general":   set()
     }
 
-    if not os.path.exists(settingsFile):
+    if not os.path.exists(SETTINGS_FILE):
         return default
 
-    with sqlite3.connect(settingsFile) as con:
+    with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
         cur.execute("""
         SELECT rating, character, copyright, general
@@ -53,8 +53,8 @@ def loadSettings(chat_id, settingsFile = SETTINGS_FILE):
             "general":   set(util.splitOrEmpty(data[3], ","))
         }
 
-def saveSettings(chat_id, settings, settingsFile = SETTINGS_FILE):
-    if not os.path.exists(settingsFile):
+def saveSettings(chat_id, settings):
+    if not os.path.exists(SETTINGS_FILE):
         initDB()
 
     rating    = ",".join(settings["rating"])
@@ -62,7 +62,7 @@ def saveSettings(chat_id, settings, settingsFile = SETTINGS_FILE):
     copyright = ",".join(settings["copyright"])
     general   = ",".join(settings["general"])
 
-    with sqlite3.connect(settingsFile) as con:
+    with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
         cur.execute("""
         INSERT OR REPLACE INTO settings (chat_id, rating, character, copyright, general)
