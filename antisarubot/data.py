@@ -25,7 +25,7 @@ def initDB():
 
 def loadData(chat_id, post_id):
     if not os.path.exists(DATA_FILE):
-        return None
+        initDB()
 
     with sqlite3.connect(DATA_FILE) as con:
         cur = con.cursor()

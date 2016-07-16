@@ -34,7 +34,7 @@ def loadSettings(chat_id):
     }
 
     if not os.path.exists(SETTINGS_FILE):
-        return default
+        initDB()
 
     with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
