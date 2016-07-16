@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+HANDLER_NAME = "i2v_offline"
+
 import i2v
 from PIL import Image
 

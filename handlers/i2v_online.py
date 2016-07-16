@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+HANDLER_NAME = "i2v_online"
+
 import re
 import requests
 import string

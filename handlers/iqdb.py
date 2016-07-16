@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+HANDLER_NAME = "iqdb"
+
 import re
 import requests
 import string

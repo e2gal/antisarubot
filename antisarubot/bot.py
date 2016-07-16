@@ -7,6 +7,7 @@ import tempfile
 import telepot
 
 import config
+import data
 import messages
 import settings
 
@@ -38,14 +39,25 @@ class AntisaruBot(telepot.Bot):
 
         fileID = msg["photo"][-1]["file_id"]
         (rating, character, copyright, general) = ("", set(), set(), set())
+
+        dbData = data.loadData(chat_id, msg["message_id"])
+        if dbData:
+            rating    = dbData["rating"]
+            character = dbData["character"]
+            copyright = dbData["copyright"]
+            general   = dbData["general"]
+
+            return (rating, character, copyright, general)
+
+        handlerName = ""
         with tempfile.NamedTemporaryFile() as f:
             self.download_file(fileID, f.name)
 
-            res = None
             for h in handlersList:
                 res = h.run(f)
                 if res:
-                    break
+                    (rating, character, copyright, general) = res
+                    handlerName = h.HANDLER_NAME
                 else:
                     # Rewind file for reading with other handler.
                     f.seek(0)
@@ -53,7 +65,15 @@ class AntisaruBot(telepot.Bot):
             if not res:
                 raise InferenceError("Cannot do inference on this image")
 
-            (rating, character, copyright, general) = res
+        data.saveData(chat_id, msg["message_id"], {
+            "rating":    rating,
+            "character": character,
+            "copyright": copyright,
+            "general":   general,
+            "time":      msg["date"],
+            "handler":   handlerName
+        })
+
         return (rating, character, copyright, general)
 
     def _getChatSettings(self, chat_id):
