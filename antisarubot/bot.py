@@ -29,25 +29,7 @@ class AntisaruBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
         super(AntisaruBot, self).__init__(*args, **kwargs)
         self._answerer = telepot.helper.Answerer(self)
-        self.settings  = settings.loadSettings()
         self.username  = "@" + self.getMe()["username"]
-
-    def _getSettings(self, chat_id, tagcategory):
-        res = set()
-        try:
-            res = self.settings[chat_id][tagcategory]
-        except:
-            pass
-
-        return res
-
-    def _getChatSettings(self, chat_id):
-        rating    = self._getSettings(chat_id, "rating")
-        character = self._getSettings(chat_id, "character")
-        copyright = self._getSettings(chat_id, "copyright")
-        general   = self._getSettings(chat_id, "general")
-
-        return (rating, character, copyright, general)
 
     def _getTagList(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -74,28 +56,37 @@ class AntisaruBot(telepot.Bot):
             (rating, character, copyright, general) = res
         return (rating, character, copyright, general)
 
+    def _getChatSettings(self, chat_id):
+        s = settings.loadSettings(chat_id)
+
+        rating    = s["rating"]
+        character = s["character"]
+        copyright = s["copyright"]
+        general   = s["general"]
+
+        return (rating, character, copyright, general)
+
     def _addSettings(self, chat_id, category, tagList):
         tl = map(lambda s : string.replace(s, "_", " "), tagList)
-
-        if chat_id not in self.settings:
-            self.settings[chat_id] = {}
+        s = settings.loadSettings(chat_id)
 
         try:
-            self.settings[chat_id][category] |= set(tl)
+            s[category] |= set(tl)
         except:
-            self.settings[chat_id][category]  = set(tl)
+            s[category]  = set(tl)
 
-        settings.saveSettings(self.settings)
+        settings.saveSettings(chat_id, s)
 
     def _rmSettings(self, chat_id, category, tagList):
         tl = map(lambda s : string.replace(s, "_", " "), tagList)
+        s = settings.loadSettings(chat_id)
 
         try:
-            self.settings[chat_id][category] -= set(tl)
+            s[category] -= set(tl)
         except:
             pass
 
-        settings.saveSettings(self.settings)
+        settings.saveSettings(chat_id, s)
 
     def on_edited_chat_message(self, msg):
         pass
@@ -149,10 +140,8 @@ class AntisaruBot(telepot.Bot):
                     if len(params) != 1 or params[0] not in ['rating', 'character', 'copyright', 'general']:
                         mt = "Please specify tag category to clear."
                     else:
-                        try:
-                            self.settings[chat_id][params[0]] = set()
-                        except:
-                            pass
+                        allEntries = settings.loadSettings(chat_id)[params[0]]
+                        self._rmSettings(chat_id, params[0], allEntries)
                         mt = messages.okay
 
                 if re.match(r"^show$", command):
