@@ -6,6 +6,12 @@ import sqlite3
 
 SETTINGS_FILE = "data/settings.sqlite"
 
+def _splitOrEmpty(s, delim):
+    if len(s) == 0:
+        return []
+
+    return s.split(delim)
+
 def initDB(settingsFile = SETTINGS_FILE):
     with sqlite3.connect(settingsFile) as con:
         cur = con.cursor()
@@ -39,10 +45,10 @@ def loadSettings(chat_id, settingsFile = SETTINGS_FILE):
             return default
 
         return {
-            "rating":    set(data[0].split(",")),
-            "character": set(data[1].split(",")),
-            "copyright": set(data[2].split(",")),
-            "general":   set(data[3].split(","))
+            "rating":    set(_splitOrEmpty(data[0], ",")),
+            "character": set(_splitOrEmpty(data[1], ",")),
+            "copyright": set(_splitOrEmpty(data[2], ",")),
+            "general":   set(_splitOrEmpty(data[3], ","))
         }
 
 def saveSettings(chat_id, settings, settingsFile = SETTINGS_FILE):
