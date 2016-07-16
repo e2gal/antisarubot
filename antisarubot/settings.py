@@ -1,8 +1,9 @@
 #!/usr/bin/env python2
 
-# Ampuni aku... :(
 import os
 import sqlite3
+
+import util
 
 SETTINGS_FILE = "data/settings.sqlite"
 
@@ -45,10 +46,10 @@ def loadSettings(chat_id, settingsFile = SETTINGS_FILE):
             return default
 
         return {
-            "rating":    set(_splitOrEmpty(data[0], ",")),
-            "character": set(_splitOrEmpty(data[1], ",")),
-            "copyright": set(_splitOrEmpty(data[2], ",")),
-            "general":   set(_splitOrEmpty(data[3], ","))
+            "rating":    set(util.splitOrEmpty(data[0], ",")),
+            "character": set(util.splitOrEmpty(data[1], ",")),
+            "copyright": set(util.splitOrEmpty(data[2], ",")),
+            "general":   set(util.splitOrEmpty(data[3], ","))
         }
 
 def saveSettings(chat_id, settings, settingsFile = SETTINGS_FILE):

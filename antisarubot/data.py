@@ -3,13 +3,9 @@
 import os
 import sqlite3
 
+import util
+
 DATA_FILE = "data/data.sqlite"
-
-def _splitOrEmpty(s, delim):
-    if len(s) == 0:
-        return []
-
-    return s.split(delim)
 
 def initDB():
     with sqlite3.connect(DATA_FILE) as con:
@@ -42,9 +38,9 @@ def loadData(chat_id, post_id):
 
         return {
             "rating":    data[0],
-            "character": set(_splitOrEmpty(data[1], ",")),
-            "copyright": set(_splitOrEmpty(data[2], ",")),
-            "general":   set(_splitOrEmpty(data[3], ","))
+            "character": set(util.splitOrEmpty(data[1], ",")),
+            "copyright": set(util.splitOrEmpty(data[2], ",")),
+            "general":   set(util.splitOrEmpty(data[3], ","))
         }
 
 def saveData(chat_id, post_id, data):
