@@ -40,7 +40,7 @@ class AntisaruBot(telepot.Bot):
         fileID = msg["photo"][-1]["file_id"]
         (rating, character, copyright, general) = ("", set(), set(), set())
 
-        dbData = data.loadData(chat_id, msg["message_id"])
+        dbData = data.loadData(chat_id, fileID)
         if dbData:
             rating    = dbData["rating"]
             character = dbData["character"]
@@ -66,7 +66,7 @@ class AntisaruBot(telepot.Bot):
             if not res:
                 raise InferenceError("Cannot do inference on this image")
 
-        data.saveData(chat_id, msg["message_id"], {
+        data.saveData(chat_id, fileID, {
             "rating":    rating,
             "character": character,
             "copyright": copyright,

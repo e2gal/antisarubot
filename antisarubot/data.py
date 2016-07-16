@@ -14,16 +14,16 @@ def initDB():
         cur.execute("""
         CREATE TABLE IF NOT EXISTS image_data (
             chat_id INT,
-            post_id INT,
+            file_id TEXT,
             time INT,
             rating TEXT,
             character TEXT,
             copyright TEXT,
             general TEXT,
             handler_used TEXT,
-            PRIMARY KEY (chat_id, post_id))""")
+            PRIMARY KEY (chat_id, file_id))""")
 
-def loadData(chat_id, post_id):
+def loadData(chat_id, file_id):
     if not os.path.exists(DATA_FILE):
         initDB()
 
@@ -32,7 +32,7 @@ def loadData(chat_id, post_id):
         cur.execute("""
         SELECT rating, character, copyright, general
           FROM image_data
-         WHERE chat_id = ? AND post_id = ?""", (chat_id, post_id))
+         WHERE chat_id = ? AND file_id = ?""", (chat_id, file_id))
         data = cur.fetchone()
         if data is None:
             return None
@@ -44,7 +44,7 @@ def loadData(chat_id, post_id):
             "general":   set(util.splitOrEmpty(data[3], ","))
         }
 
-def saveData(chat_id, post_id, data):
+def saveData(chat_id, file_id, data):
     if not os.path.exists(DATA_FILE):
         initDB()
 
@@ -59,6 +59,6 @@ def saveData(chat_id, post_id, data):
         cur = con.cursor()
         cur.execute("""
         INSERT OR REPLACE INTO image_data (
-            chat_id, post_id, time, rating, character, copyright, general, handler_used)
+            chat_id, file_id, time, rating, character, copyright, general, handler_used)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (chat_id, post_id, time, rating, character, copyright, general, handler))
+        (chat_id, file_id, time, rating, character, copyright, general, handler))
