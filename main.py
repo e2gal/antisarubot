@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-from i2vbot import bot
+from antisarubot import bot
 import config
 
 app = None
@@ -21,7 +21,7 @@ if config.WEBHOOK:
 def main():
     print('Listening...')
 
-    botObj = bot.I2VBot(config.TOKEN)
+    botObj = bot.AntisaruBot(config.TOKEN)
 
     if config.WEBHOOK:
         botObj.message_loop(source = update_queue)

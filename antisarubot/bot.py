@@ -25,9 +25,9 @@ class InferenceError(Exception):
     def __init__(self, message):
         self.message = message
 
-class I2VBot(telepot.Bot):
+class AntisaruBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
-        super(I2VBot, self).__init__(*args, **kwargs)
+        super(AntisaruBot, self).__init__(*args, **kwargs)
         self._answerer = telepot.helper.Answerer(self)
         self.settings  = settings.loadSettings()
         self.username  = "@" + self.getMe()["username"]
