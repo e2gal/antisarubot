@@ -8,12 +8,6 @@ import util
 
 SETTINGS_FILE = config.SETTINGS_FILE
 
-def _splitOrEmpty(s, delim):
-    if len(s) == 0:
-        return []
-
-    return s.split(delim)
-
 def initDB():
     with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
