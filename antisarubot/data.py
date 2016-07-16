@@ -3,9 +3,10 @@
 import os
 import sqlite3
 
+import config
 import util
 
-DATA_FILE = "data/data.sqlite"
+DATA_FILE = config.DATA_FILE
 
 def initDB():
     with sqlite3.connect(DATA_FILE) as con:

@@ -11,3 +11,7 @@ HANDLERS = ["iqdb", "i2v_online", "i2v_offline"]
 WEBHOOK      = False
 WEBHOOK_HOST = "http://localhost"
 WEBHOOK_PORT = 80
+
+# File paths.
+DATA_FILE     = "data/data.sqlite"
+SETTINGS_FILE = "data/settings.sqlite"

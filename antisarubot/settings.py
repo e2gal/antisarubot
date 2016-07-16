@@ -3,9 +3,10 @@
 import os
 import sqlite3
 
+import config
 import util
 
-SETTINGS_FILE = "data/settings.sqlite"
+SETTINGS_FILE = config.SETTINGS_FILE
 
 def _splitOrEmpty(s, delim):
     if len(s) == 0:
