@@ -58,6 +58,7 @@ class AntisaruBot(telepot.Bot):
                 if res:
                     (rating, character, copyright, general) = res
                     handlerName = h.HANDLER_NAME
+                    break
                 else:
                     # Rewind file for reading with other handler.
                     f.seek(0)
