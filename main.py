@@ -27,7 +27,7 @@ def main():
         bot_obj.message_loop(source = update_queue)
         bot_obj.setWebhook(config.WEBHOOK_HOST + "/" + config.TOKEN)
     else:
-        bot_obj.message_loop(run_forever = True, relax = 1)
+        bot_obj.message_loop(run_forever = True)
 
 if __name__ == "__main__":
     if config.WEBHOOK:
