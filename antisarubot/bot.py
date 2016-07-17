@@ -4,6 +4,7 @@ import importlib
 import re
 import string
 import tempfile
+
 import telepot
 
 from config import HANDLERS
@@ -11,15 +12,15 @@ import data
 import messages
 import settings
 
-handlersList = []
+handlers_list = []
 for i in HANDLERS:
     try:
         m = importlib.import_module("." + i, "handlers")
-        handlersList.append(m)
+        handlers_list.append(m)
     except ImportError as e:
         print e
 
-    if len(handlersList) == 0:
+    if len(handlers_list) == 0:
         raise ImportError("No handler specified")
 
 class InferenceError(Exception):
@@ -30,34 +31,34 @@ class AntisaruBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
         super(AntisaruBot, self).__init__(*args, **kwargs)
         self._answerer = telepot.helper.Answerer(self)
-        self.username  = "@" + self.getMe()["username"]
+        self.username = "@" + self.getMe()["username"]
 
-    def _getTagList(self, msg):
+    def _get_tag_list(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
         if content_type != "photo":
             return None
 
-        fileID = msg["photo"][-1]["file_id"]
+        file_id = msg["photo"][-1]["file_id"]
         (rating, character, copyright, general) = ("", set(), set(), set())
 
-        dbData = data.loadData(chat_id, fileID)
-        if dbData:
-            rating    = dbData["rating"]
-            character = dbData["character"]
-            copyright = dbData["copyright"]
-            general   = dbData["general"]
+        db_data = data.load_data(chat_id, file_id)
+        if db_data:
+            rating    = db_data["rating"]
+            character = db_data["character"]
+            copyright = db_data["copyright"]
+            general   = db_data["general"]
 
             return (rating, character, copyright, general)
 
-        handlerName = ""
+        handler_name = ""
         with tempfile.NamedTemporaryFile() as f:
-            self.download_file(fileID, f.name)
+            self.download_file(file_id, f.name)
 
-            for h in handlersList:
+            for h in handlers_list:
                 res = h.run(f)
                 if res:
                     (rating, character, copyright, general) = res
-                    handlerName = h.HANDLER_NAME
+                    handler_name = h.HANDLER_NAME
                     break
                 else:
                     # Rewind file for reading with other handler.
@@ -66,19 +67,19 @@ class AntisaruBot(telepot.Bot):
             if not res:
                 raise InferenceError("Cannot do inference on this image")
 
-        data.saveData(chat_id, fileID, {
+        data.save_data(chat_id, file_id, {
             "rating":    rating,
             "character": character,
             "copyright": copyright,
             "general":   general,
             "time":      msg["date"],
-            "handler":   handlerName
+            "handler":   handler_name
         })
 
         return (rating, character, copyright, general)
 
-    def _getChatSettings(self, chat_id):
-        s = settings.loadSettings(chat_id)
+    def _get_chat_settings(self, chat_id):
+        s = settings.load_settings(chat_id)
 
         rating    = s["rating"]
         character = s["character"]
@@ -87,27 +88,27 @@ class AntisaruBot(telepot.Bot):
 
         return (rating, character, copyright, general)
 
-    def _addSettings(self, chat_id, category, tagList):
+    def _add_settings(self, chat_id, category, tagList):
         tl = map(lambda s : string.replace(s, "_", " "), tagList)
-        s = settings.loadSettings(chat_id)
+        s = settings.load_settings(chat_id)
 
         try:
             s[category] |= set(tl)
         except:
             s[category]  = set(tl)
 
-        settings.saveSettings(chat_id, s)
+        settings.save_settings(chat_id, s)
 
-    def _rmSettings(self, chat_id, category, tagList):
+    def _rm_settings(self, chat_id, category, tagList):
         tl = map(lambda s : string.replace(s, "_", " "), tagList)
-        s = settings.loadSettings(chat_id)
+        s = settings.load_settings(chat_id)
 
         try:
             s[category] -= set(tl)
         except:
             pass
 
-        settings.saveSettings(chat_id, s)
+        settings.save_settings(chat_id, s)
 
     def on_edited_chat_message(self, msg):
         pass
@@ -117,19 +118,19 @@ class AntisaruBot(telepot.Bot):
         mt = None
 
         if content_type == "photo":
-            (rating, character, copyright, general) = self._getTagList(msg)
-            (warnRating, warnCharacter, warnCopyright, warnGeneral) = self._getChatSettings(chat_id)
-            if character & warnCharacter:
-                mt = messages.tagError(character & warnCharacter)
+            (rating, character, copyright, general) = self._get_tag_list(msg)
+            (warn_rating, warn_character, warn_copyright, warn_general) = self._get_chat_settings(chat_id)
+            if character & warn_character:
+                mt = messages.tag_error(character & warn_character)
 
-            if copyright & warnCopyright:
-                mt = messages.tagError(copyright & warnCopyright)
+            if copyright & warn_copyright:
+                mt = messages.tag_error(copyright & warn_copyright)
 
-            if general & warnGeneral:
-                mt = messages.tagError(general & warnGeneral)
+            if general & warn_general:
+                mt = messages.tag_error(general & warn_general)
 
-            if rating in warnRating:
-                mt = messages.ratingError
+            if rating in warn_rating:
+                mt = messages.rating_error
 
             if mt:
                 self.sendMessage(chat_id, mt, reply_to_message_id = msg["message_id"])
@@ -138,14 +139,14 @@ class AntisaruBot(telepot.Bot):
             command = msg['text'].strip().lower()
             if re.match(r"^/tagmgr(" + self.username + r")?\b", command):
                 command = re.sub(r"^/tagmgr(" + self.username + r")?\s", "", command)
-                mt = messages.tagmgrUsage
+                mt = messages.tagmgr_usage
 
                 if re.match(r"^add.+$", command):
                     params = re.sub(r"^add\s", "", command).split()
                     if len(params) == 0 or params[0] not in ['rating', 'character', 'copyright', 'general']:
                         mt = "Please specify tag category and tags to add."
                     else:
-                        self._addSettings(chat_id, params[0], params[1:])
+                        self._add_settings(chat_id, params[0], params[1:])
                         mt = messages.okay
 
                 if re.match(r"^rm.+$", command):
@@ -153,7 +154,7 @@ class AntisaruBot(telepot.Bot):
                     if len(params) == 0 or params[0] not in ['rating', 'character', 'copyright', 'general']:
                         mt = "Please specify tag category and tags to remove."
                     else:
-                        self._rmSettings(chat_id, params[0], params[1:])
+                        self._rm_settings(chat_id, params[0], params[1:])
                         mt = messages.okay
 
                 if re.match(r"^clear.+$", command):
@@ -161,12 +162,12 @@ class AntisaruBot(telepot.Bot):
                     if len(params) != 1 or params[0] not in ['rating', 'character', 'copyright', 'general']:
                         mt = "Please specify tag category to clear."
                     else:
-                        allEntries = settings.loadSettings(chat_id)[params[0]]
-                        self._rmSettings(chat_id, params[0], allEntries)
+                        all_ntries = settings.load_settings(chat_id)[params[0]]
+                        self._rm_settings(chat_id, params[0], all_entries)
                         mt = messages.okay
 
                 if re.match(r"^show$", command):
-                    (rating, character, copyright, general) = self._getChatSettings(chat_id)
+                    (rating, character, copyright, general) = self._get_chat_settings(chat_id)
                     mt  = "Warned tag list\n"
                     mt += "Rating:    " + ", ".join(rating) + "\n"
                     mt += "Character: " + ", ".join(character) + "\n"
@@ -183,7 +184,7 @@ class AntisaruBot(telepot.Bot):
                     rmsg = msg["reply_to_message"]
                     rcontent_type, rchat_type, rchat_id = telepot.glance(rmsg)
                     if rcontent_type == "photo":
-                        (rating, character, copyright, general) = self._getTagList(rmsg)
+                        (rating, character, copyright, general) = self._get_tag_list(rmsg)
 
                         mt  = "Inferred tags for this image\n"
                         mt += "Rating:    " + rating + "\n"

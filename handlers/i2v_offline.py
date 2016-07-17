@@ -1,12 +1,11 @@
 #!/usr/bin/env python2
 
-HANDLER_NAME = "i2v_offline"
+import time
 
 import i2v
 from PIL import Image
 
-import time
-
+HANDLER_NAME = "i2v_offline"
 MAXSIZE = (2500, 2500)
 
 print "Loading model..."

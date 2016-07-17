@@ -1,23 +1,23 @@
 #!/usr/bin/env python2
 
-HANDLER_NAME = "iqdb"
-
 import re
 import requests
 import string
 import time
+
 from bs4 import BeautifulSoup
 
-danbooruRegex = re.compile("^//danbooru.donmai.us/posts/(.*)$")
-
-ratingTable = {
+HANDLER_NAME = "iqdb"
+RATING_TABLE = {
     "s": "safe",
     "q": "questionable",
     "e": "explicit"
 }
 
-def tagsDanbooru(imgID):
-    resp = requests.get("http://danbooru.donmai.us/posts/" + imgID + ".json")
+danbooru_regex = re.compile("^//danbooru.donmai.us/posts/(.*)$")
+
+def tags_danbooru(img_id):
+    resp = requests.get("http://danbooru.donmai.us/posts/" + img_id + ".json")
     decoded = resp.json()
     resp.close()
 
@@ -25,7 +25,7 @@ def tagsDanbooru(imgID):
     copys = map(lambda s : string.replace(s, "_", " "), decoded["tag_string_copyright"].split(" "))
     gens  = map(lambda s : string.replace(s, "_", " "), decoded["tag_string_general"].split(" "))
 
-    rating    = ratingTable[decoded["rating"]]
+    rating    = RATING_TABLE[decoded["rating"]]
     character = set(chars)
     copyright = set(copys)
     general   = set(gens)
@@ -43,19 +43,19 @@ def run(fname):
     soup = BeautifulSoup(resp.text, "html5lib")
     resp.close()
 
-    bestMatch = soup.find(text="Best match")
-    if not bestMatch:
+    best_match = soup.find(text="Best match")
+    if not best_match:
         end = time.time()
         print "Failed. Took " + str(end - start) + "s"
         return None
 
-    match = danbooruRegex.match(bestMatch.parent.parent.parent.find("a")["href"])
+    match = danbooru_regex.match(best_match.parent.parent.parent.find("a")["href"])
     if not match:
         end = time.time()
         print "Failed. Took " + str(end - start) + "s"
         return None
 
-    res = tagsDanbooru(match.group(1))
+    res = tags_danbooru(match.group(1))
 
     end = time.time()
     print "Done. Took " + str(end - start) + "s"

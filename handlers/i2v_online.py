@@ -1,12 +1,13 @@
 #!/usr/bin/env python2
 
-HANDLER_NAME = "i2v_online"
-
 import re
 import requests
 import string
 import time
+
 from bs4 import BeautifulSoup
+
+HANDLER_NAME = "i2v_online"
 
 def run(fname):
     def fst(p):

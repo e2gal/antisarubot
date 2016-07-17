@@ -21,13 +21,13 @@ if config.WEBHOOK:
 def main():
     print('Listening...')
 
-    botObj = bot.AntisaruBot(config.TOKEN)
+    bot_obj = bot.AntisaruBot(config.TOKEN)
 
     if config.WEBHOOK:
-        botObj.message_loop(source = update_queue)
-        botObj.setWebhook(config.WEBHOOK_HOST + "/" + config.TOKEN)
+        bot_obj.message_loop(source = update_queue)
+        bot_obj.setWebhook(config.WEBHOOK_HOST + "/" + config.TOKEN)
     else:
-        botObj.message_loop(run_forever = True, relax = 1)
+        bot_obj.message_loop(run_forever = True, relax = 1)
 
 if __name__ == "__main__":
     if config.WEBHOOK:

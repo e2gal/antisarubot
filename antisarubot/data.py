@@ -6,7 +6,7 @@ import sqlite3
 from config import DATA_FILE
 import util
 
-def initDB():
+def init_db():
     with sqlite3.connect(DATA_FILE) as con:
         cur = con.cursor()
         cur.execute("""
@@ -21,9 +21,9 @@ def initDB():
             handler_used TEXT,
             PRIMARY KEY (chat_id, file_id))""")
 
-def loadData(chat_id, file_id):
+def load_data(chat_id, file_id):
     if not os.path.exists(DATA_FILE):
-        initDB()
+        init_db()
 
     with sqlite3.connect(DATA_FILE) as con:
         cur = con.cursor()
@@ -37,14 +37,14 @@ def loadData(chat_id, file_id):
 
         return {
             "rating":    data[0],
-            "character": set(util.splitOrEmpty(data[1], ",")),
-            "copyright": set(util.splitOrEmpty(data[2], ",")),
-            "general":   set(util.splitOrEmpty(data[3], ","))
+            "character": set(util.split_or_empty(data[1], ",")),
+            "copyright": set(util.split_or_empty(data[2], ",")),
+            "general":   set(util.split_or_empty(data[3], ","))
         }
 
-def saveData(chat_id, file_id, data):
+def save_data(chat_id, file_id, data):
     if not os.path.exists(DATA_FILE):
-        initDB()
+        init_db()
 
     rating    = data["rating"]
     character = ",".join(data["character"])

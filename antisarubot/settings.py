@@ -6,7 +6,7 @@ import sqlite3
 from config import SETTINGS_FILE
 import util
 
-def initDB():
+def init_db():
     with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
         cur.execute("""
@@ -17,7 +17,7 @@ def initDB():
             copyright TEXT,
             general TEXT)""")
 
-def loadSettings(chat_id):
+def load_settings(chat_id):
     default = {
         "rating":    set(),
         "character": set(),
@@ -26,7 +26,7 @@ def loadSettings(chat_id):
     }
 
     if not os.path.exists(SETTINGS_FILE):
-        initDB()
+        init_db()
 
     with sqlite3.connect(SETTINGS_FILE) as con:
         cur = con.cursor()
@@ -39,15 +39,15 @@ def loadSettings(chat_id):
             return default
 
         return {
-            "rating":    set(util.splitOrEmpty(data[0], ",")),
-            "character": set(util.splitOrEmpty(data[1], ",")),
-            "copyright": set(util.splitOrEmpty(data[2], ",")),
-            "general":   set(util.splitOrEmpty(data[3], ","))
+            "rating":    set(util.split_or_empty(data[0], ",")),
+            "character": set(util.split_or_empty(data[1], ",")),
+            "copyright": set(util.split_or_empty(data[2], ",")),
+            "general":   set(util.split_or_empty(data[3], ","))
         }
 
-def saveSettings(chat_id, settings):
+def save_settings(chat_id, settings):
     if not os.path.exists(SETTINGS_FILE):
-        initDB()
+        init_db()
 
     rating    = ",".join(settings["rating"])
     character = ",".join(settings["character"])
