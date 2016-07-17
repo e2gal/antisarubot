@@ -162,7 +162,7 @@ class AntisaruBot(telepot.Bot):
                     if len(params) != 1 or params[0] not in ['rating', 'character', 'copyright', 'general']:
                         mt = "Please specify tag category to clear."
                     else:
-                        all_ntries = settings.load_settings(chat_id)[params[0]]
+                        all_entries = settings.load_settings(chat_id)[params[0]]
                         self._rm_settings(chat_id, params[0], all_entries)
                         mt = messages.okay
 
