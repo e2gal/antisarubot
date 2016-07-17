@@ -3,10 +3,8 @@
 import os
 import sqlite3
 
-import config
+from config import SETTINGS_FILE
 import util
-
-SETTINGS_FILE = config.SETTINGS_FILE
 
 def initDB():
     with sqlite3.connect(SETTINGS_FILE) as con:

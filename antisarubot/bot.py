@@ -6,13 +6,13 @@ import string
 import tempfile
 import telepot
 
-import config
+from config import HANDLERS
 import data
 import messages
 import settings
 
 handlersList = []
-for i in config.HANDLERS:
+for i in HANDLERS:
     try:
         m = importlib.import_module("." + i, "handlers")
         handlersList.append(m)
