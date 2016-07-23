@@ -177,7 +177,7 @@ class AntisaruBot(telepot.Bot):
                 self.sendMessage(chat_id, mt, reply_to_message_id = msg["message_id"])
 
             if re.match(r"^/showtags(" + self.username + r")?$", command):
-                mt = "Please use this command to reply to an image post."
+                mt = "Please use this command as a reply to an image message."
                 reply_id = msg["message_id"]
 
                 if "reply_to_message" in msg:
